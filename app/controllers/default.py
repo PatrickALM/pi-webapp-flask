@@ -15,8 +15,8 @@ from app.models.forms import LoginForm
 def load_user(id_usuario):
     return User.query.filter_by(id_usuario=id_usuario).first()
 
-@app.route("/index")
-@app.route("/")
+@app.route("/index",methods=["GET","POST"])
+@app.route("/",methods=["GET","POST"])
 def index():
     return render_template("index.html")
 
