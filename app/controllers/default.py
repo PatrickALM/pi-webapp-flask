@@ -8,7 +8,7 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import login_user, logout_user
 
 from app.models.tables import User, Post, Category
-from app.models.forms import LoginForm
+from app.models.forms import LoginForm, RegisterForm
 
 
 @lm.user_loader
@@ -18,7 +18,20 @@ def load_user(id_usuario):
 @app.route("/index",methods=["GET","POST"])
 @app.route("/",methods=["GET","POST"])
 def index():
-    return render_template("index.html")
+    form_register = RegisterForm()
+    if form_register.validate_on_submit():
+        if form_register.password.data == form_register.password_auth.data:
+            u = User(form_register.email.data, form_register.password.data, form_register.name.data, form_register.last_name.data, 
+                     form_register.email.data, form_register.cep.data, form_register.estado.data, form_register.cidade.data,
+                     form_register.bairro.data, form_register.phone_number.data)
+            db.session.add(u)
+            db.session.commit()
+            return redirect(url_for("login"))
+        else:
+            flash("Erro de confirmação de senha.")
+    else:
+        print(form_register.errors)
+    return render_template("index.html", form=form_register)
 
 @app.route("/login", methods=["GET","POST"])
 def login():

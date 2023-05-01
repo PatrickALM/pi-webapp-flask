@@ -39,27 +39,27 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link click-scroll" href="#top">Home</a>
+                        <a class="nav-link click-scroll" href="#top">Inicio</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link click-scroll" href="#section_2">About</a>
+                        <a class="nav-link click-scroll" href="#section_2">Sobre</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link click-scroll" href="#section_3">Causes</a>
+                        <a class="nav-link click-scroll" href="#section_3">Como ajudar</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link click-scroll" href="#section_4">Volunteer</a>
+                        <a class="nav-link click-scroll" href="#section_4">Registre-se</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link click-scroll" href="#section_6">Contact</a>
+                        <a class="nav-link click-scroll" href="#section_6">Buscar</a>
                     </li>
 
                     <li class="nav-item ms-3">
-                        <a class="nav-link custom-btn custom-border-btn btn" href="{{ url_for('login') }}">Doar</a>
+                        <a class="nav-link custom-btn custom-border-btn btn" href="{{ url_for('login') }}">Entrar</a>
                     </li>
                 </ul>
             </div>
@@ -153,6 +153,215 @@
             </div>
         </div>
     </section>
+
+    <section class="section-padding section-bg" id="section_2">
+      <div class="container">
+          <div class="row">
+
+              <div class="col-lg-6 col-12 mb-5 mb-lg-0">
+                  <img src=" {{url_for('static', filename='images/polo-ceu-agua-azul.jpg')}}"
+                      class="custom-text-box-image img-fluid" alt="">
+              </div>
+
+              <div class="col-lg-6 col-12">
+                  <div class="custom-text-box">
+                      <h2 class="mb-2">Nossa História</h2>
+
+                      <h5 class="mb-3">TECSOL, Tecnologia e Solidariedade</h5>
+
+                      <p class="mb-0">Produto de um Projeto Integrador para a Universidade Virtual do Estado de São Paulo
+                                      (UNIVESP), este website foi desenvolvido por alunos do Eixo de Computação do Polo Ceu Água Azul.
+                      </p>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-lg-6 col-md-6 col-12">
+                          <div class="custom-text-box mb-lg-0">
+                              <h5 class="mb-3">Nossa Missão</h5>
+
+                              <p>Sed leo nisl, posuere at molestie ac, suscipit auctor quis metus</p>
+
+                              <ul class="custom-list mt-2">
+                                  <li class="custom-list-item d-flex">
+                                      <i class="bi-check custom-text-box-icon me-2"></i>
+                                      Charity Theme
+                                  </li>
+
+                                  <li class="custom-list-item d-flex">
+                                      <i class="bi-check custom-text-box-icon me-2"></i>
+                                      Semantic HTML
+                                  </li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+          </div>
+      </div>
+  </section>
+
+
+  <section class="section-padding" id="section_3">
+    <div class="container">
+        <div class="row justify-content-center">
+
+            <div class="col-lg-10 col-12 text-center mx-auto">
+                <h2 class="mb-5">Como posso ajudar?</h2>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
+                <div class="featured-block d-flex justify-content-center align-items-center">
+                    <a href="#" class="d-block">
+                        <img src=" {{url_for('static', filename='images/brinquedos2.png')}} " width= "200" height="200" class="featured-block-image img-fluid" alt="">
+
+                        <p class="featured-block-text"><strong>Brinquedos</strong></p>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-4">
+                <div class="featured-block d-flex justify-content-center align-items-center">
+                    <a href="#" class="d-block">
+                        <img src=" {{url_for('static', filename='images/cobertores.jpg')}}" width= "200" height="200" class="featured-block-image img-fluid" alt="">
+
+                        <p class="featured-block-text"> <strong>Cobertores</strong></p>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-4">
+                <div class="featured-block d-flex justify-content-center align-items-center">
+                    <a href="#"  class="d-block">
+                        <img src=" {{url_for('static', filename='images/bycicle2.png')}}" width= "200" height="200" class="featured-block-image img-fluid" alt="">
+
+                        <p class="featured-block-text"><strong>Bicicletas</strong></p>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-4">
+              <div class="featured-block d-flex justify-content-center align-items-center">
+                  <a href="#"  class="d-block">
+                      <img src=" {{url_for('static', filename='images/sapatos.jpg')}}" width= "200" height="200" class="featured-block-image img-fluid" alt="">
+
+                      <p class="featured-block-text"><strong>Sapatos</strong></p>
+                  </a>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-4">
+              <div class="featured-block d-flex justify-content-center align-items-center">
+                  <a href="#"  class="d-block">
+                      <img src=" {{url_for('static', filename='images/clothes2.png')}}" width= "200" height="200" class="featured-block-image img-fluid" alt="">
+
+                      <p class="featured-block-text"><strong>Roupas</strong></p>
+                  </a>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-4">
+              <div class="featured-block d-flex justify-content-center align-items-center">
+                  <a href="#"  class="d-block">
+                      <img src=" {{url_for('static', filename='images/furniture.png')}}" width= "200" height="200" class="featured-block-image img-fluid" alt="">
+
+                      <p class="featured-block-text"><strong>Móveis</strong></p>
+                  </a>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-4">
+              <div class="featured-block d-flex justify-content-center align-items-center">
+                  <a href="#"  class="d-block">
+                      <img src=" {{url_for('static', filename='images/livros.jpg')}}" width= "200" height="200" class="featured-block-image img-fluid" alt="">
+
+                      <p class="featured-block-text"><strong>Livros</strong></p>
+                  </a>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-4">
+              <div class="featured-block d-flex justify-content-center align-items-center">
+                  <a href="#"  class="d-block">
+                      <img src=" {{url_for('static', filename='images/eletronic.png')}}" width= "200" height="200" class="featured-block-image img-fluid" alt="">
+
+                      <p class="featured-block-text"><strong>Eletroeletrônicos</strong></p>
+                  </a>
+              </div>
+            </div>
+
+        </div>
+    </div>
+  </section>
+
+  <section class="volunteer-section section-padding" id="section_4">
+    <div class="container">
+        <div class="row justify-content-center">
+
+            <div class="col-lg-6 col-12">
+                <h2 class="text-white mb-4">Cadastre-se</h2>
+
+                <form class="custom-form volunteer-form mb-5 mb-lg-0" action="#" method="post" role="form">
+                    {{ form.csrf_token }}
+        
+                    <div class="row">
+                        <div class="col-lg-6 col-12 form-group">
+                            <label>Nome</label>
+                            {{ form.name(class="form-control", placeholder="Digite seu nome") }}
+                        </div>
+
+                        <div class="col-lg-6 col-12 form-group">
+                          <label>Sobrenome</label>
+                          {{ form.last_name(class="form-control", placeholder="Digite seu sobrenome") }}
+                        </div>
+                        
+                        <div class="col-lg-6 col-12 form-group">
+                          <label>Email</label>
+                          {{ form.email(class="form-control", placeholder="Digite seu email") }}
+                        </div>
+
+                        <div class="col-lg-6 col-12 form-group">
+                          <label>Telefone</label>
+                          {{ form.phone_number(class="form-control", placeholder="(xx) xxxxx-xxxx") }}
+                        </div>
+
+                        <div class="col-lg-6 col-12 form-group">
+                          <label>Senha</label>
+                          {{ form.password(class="form-control", placeholder="Digite sua senha") }}
+                        </div>
+
+                        <div class="col-lg-6 col-12 form-group">
+                          <label>Confirme sua senha</label>
+                          {{ form.password_auth(class="form-control", placeholder="Digite sua senha novamente") }}
+                        </div>
+
+                        <div class="col-lg-6 col-12 form-group">
+                          <label>CEP</label>
+                          {{ form.cep(class="form-control", placeholder="Digite seu CEP") }}
+                        </div>
+
+                        <div class="col-lg-6 col-12 form-group">
+                          <label>Estado</label>
+                          {{ form.estado(class="form-control", placeholder="Digite seu estado") }}
+                        </div>
+
+                        <div class="col-lg-6 col-12 form-group">
+                          <label>Cidade</label>
+                          {{ form.cidade(class="form-control", placeholder="Digite sua cidade") }}
+                        </div>
+
+                        <div class="col-lg-6 col-12 form-group">
+                          <label>Bairro</label>
+                          {{ form.bairro(class="form-control", placeholder="Digite seu bairro") }}
+                        </div>
+
+                    <button type="submit" class="form-control">Continuar</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+  </section>
 
       <h1 class = "text-center text-dark mt-5"> Pagina Principal</h1>
     </main>

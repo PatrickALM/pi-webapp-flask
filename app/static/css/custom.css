@@ -47,12 +47,12 @@ Customização do css a partir da utilização do BootStrap 5.
 -----------------------------------------*/
 :root {
   --white-color:                  #ffffff;
-  --primary-color:                #C5103C;
+  --primary-color:                #71b42a;
   --secondary-color:              #5a6f80;
   --section-bg-color:             #f0f8ff;
   --site-footer-bg-color:         #44525d;
   --custom-btn-bg-color:          #597081;
-  --custom-btn-bg-hover-color:    #C5103C;
+  --custom-btn-bg-hover-color:    #71b42a;
   --dark-color:                   #000000;
   --p-color:                      #717275;
   --border-color:                 #e9eaeb;
@@ -634,6 +634,7 @@ strong {
   text-align: center;
   transition: all 0.5s ease;
   min-height: 256px;
+  min-width: 256px;
   padding: 15px;
 }
 
@@ -658,7 +659,7 @@ strong {
 }
 
 .featured-block-text {
-  color: var(--primary-color);
+  color: var(--dark-color);
   font-size: var(--h5-font-size);
   margin-top: 20px;
   transition: all 0.5s;
