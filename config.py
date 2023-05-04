@@ -1,3 +1,14 @@
+import os.path
+basedir = os.path.abspath(os.path.dirname(__file__))
 
-SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:J2*5TSuBHQ8M@localhost/prototipo_pi23'
+
+### CONEXÃO COM MYSQL ###
+#SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:J2*5TSuBHQ8M@localhost/prototipo_pi23'
+
+
+
+### CONEXÃO COM SQLITE ###
+SQLALCHEMY_DATABASE_URI = 'sqlite:///'+ os.path.join(basedir,'storage.db')
 SECRET_KEY = "SENHA_BEM_SEGURA"
+
+

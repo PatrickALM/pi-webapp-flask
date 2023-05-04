@@ -22,11 +22,11 @@ def index():
     if form_register.validate_on_submit():
         if form_register.password.data == form_register.password_auth.data:
             u = User(form_register.email.data, form_register.password.data, form_register.name.data, form_register.last_name.data, 
-                     form_register.email.data, form_register.cep.data, form_register.estado.data, form_register.cidade.data,
+                     form_register.cep.data, form_register.estado.data, form_register.cidade.data,
                      form_register.bairro.data, form_register.phone_number.data)
             db.session.add(u)
             db.session.commit()
-            return redirect(url_for("login"))
+            return redirect(url_for("register"))
         else:
             flash("Erro de confirmação de senha.")
     else:
@@ -37,7 +37,7 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        u = User.query.filter_by(nome_usuario=form.username.data).first()
+        u = User.query.filter_by(email=form.email.data).first()
         if u and u.password == form.password.data:
             login_user(u)
             flash("Usuário Logado")
@@ -57,7 +57,7 @@ def logout():
 
 @app.route("/register")
 def register():
-    return "Formulário de cadastro"
+    return render_template("cadastro.html")
 
 @app.route("/doacoes")
 def doacoes():
@@ -77,15 +77,25 @@ def profile():
 
 
 
-#pagina de teste para inserir dados no banco (CREATE)
-@app.route("/teste/<info>")
-@app.route("/teste", defaults={"info": None})
-def teste(info):
-    i = User("palmeida", "123", "patrick", "almeida", "patrick@gmail.com", "125361253", "Sao Paulo", "Sao Paulo",
-              "Cidade Tiradentes","88888516428")
+#Inserindo dados de categorias
+@app.route("/insere_post/<info>")
+@app.route("/insere_post", defaults={"info": None})
+def post(info):
+    i = Post("Bicicleta Y", "X tempo de uso em bom estado", None,None, None, None )
     db.session.add(i)
     db.session.commit()
-    return "Usuario registrado"
+    return "Dados Inseridos"
+
+#Inserindo dados de categorias
+@app.route("/insere_categorias/<info>")
+@app.route("/insere_categorias", defaults={"info": None})
+def categorias(info):
+    categorys = ["Bicicletas", "Brinquedos", "Cobertores", "Eletroeletronicos", "Livros", "Moveis", "Roupas", "Sapatos"]
+    for c in categorys:
+        i = Category(c)
+        db.session.add(i)
+        db.session.commit()
+    return "Dados Inseridos"
 
 #pagina de teste para selecionar dados no banco (READ)
 @app.route("/teste2/<info>")

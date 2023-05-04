@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 5b5b07272202
+Revision ID: 720ed3817ef1
 Revises: 
-Create Date: 2023-03-29 14:13:05.233789
+Create Date: 2023-05-03 15:45:26.616564
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5b5b07272202'
+revision = '720ed3817ef1'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,24 +26,27 @@ def upgrade():
     )
     op.create_table('users',
     sa.Column('id_usuario', sa.Integer(), nullable=False),
-    sa.Column('nome_usuario', sa.String(length=255), nullable=False),
+    sa.Column('email', sa.String(length=255), nullable=False),
     sa.Column('senha', sa.String(length=255), nullable=False),
     sa.Column('nome', sa.String(length=255), nullable=False),
     sa.Column('sobrenome', sa.String(length=255), nullable=False),
-    sa.Column('email', sa.String(length=255), nullable=False),
     sa.Column('cep', sa.String(length=255), nullable=False),
     sa.Column('estado', sa.String(length=255), nullable=False),
     sa.Column('cidade', sa.String(length=255), nullable=False),
     sa.Column('bairro', sa.String(length=255), nullable=False),
     sa.Column('telefone', sa.String(length=255), nullable=False),
     sa.PrimaryKeyConstraint('id_usuario'),
-    sa.UniqueConstraint('email'),
-    sa.UniqueConstraint('nome_usuario')
+    sa.UniqueConstraint('email')
     )
     op.create_table('posts',
     sa.Column('id_post', sa.Integer(), nullable=False),
     sa.Column('titulo', sa.String(length=255), nullable=False),
     sa.Column('descricao', sa.String(length=255), nullable=True),
+    sa.Column('img_1', sa.BLOB(), nullable=True),
+    sa.Column('img_2', sa.BLOB(), nullable=True),
+    sa.Column('img_3', sa.BLOB(), nullable=True),
+    sa.Column('img_4', sa.BLOB(), nullable=True),
+    sa.Column('data_hora', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('id_usuario', sa.Integer(), nullable=True),
     sa.Column('id_categoria', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['id_categoria'], ['categorys.id_categoria'], ),
