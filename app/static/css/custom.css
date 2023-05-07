@@ -47,12 +47,12 @@ Customização do css a partir da utilização do BootStrap 5.
 -----------------------------------------*/
 :root {
   --white-color:                  #ffffff;
-  --primary-color:                #71b42a;
-  --secondary-color:              #5a6f80;
+  --primary-color:                #4d8116;
+  --secondary-color:              #186baf;
   --section-bg-color:             #f0f8ff;
   --site-footer-bg-color:         #44525d;
   --custom-btn-bg-color:          #597081;
-  --custom-btn-bg-hover-color:    #71b42a;
+  --custom-btn-bg-hover-color:    #4d8116;
   --dark-color:                   #000000;
   --p-color:                      #717275;
   --border-color:                 #e9eaeb;
