@@ -4,17 +4,38 @@ para acessar as páginas, os templates que devem ser renderizados e interações
 formulários
 '''
 from app import app, db, lm
-from flask import render_template, flash, redirect, url_for
-from flask_login import login_user, logout_user
+from flask import render_template, flash, redirect, url_for, request
+from flask_login import login_user, logout_user, current_user
 
 from app.models.tables import User, Post, Category
-from app.models.forms import LoginForm, RegisterForm
+from app.models.forms import LoginForm, RegisterForm, SearchForm, FilterCategory,FilterOptions, FilterState,PostForm,UserEditForm
+
+import base64
 
 
+
+'''
+Inicializa variáveis globais
+'''
+st_categoria = ""
+st_estado = ""
+st_opcoes = "Mais Recentes"
+
+
+
+'''
+Carrega o Load Manager, que é responsável pelo gerenciamento de sessão de usuário
+'''
 @lm.user_loader
 def load_user(id_usuario):
     return User.query.filter_by(id_usuario=id_usuario).first()
 
+
+
+
+'''
+Página Principal
+'''
 @app.route("/index",methods=["GET","POST"])
 @app.route("/",methods=["GET","POST"])
 def index():
@@ -33,6 +54,11 @@ def index():
         print(form_register.errors)
     return render_template("index.html", form=form_register)
 
+
+
+'''
+Página de Login
+'''
 @app.route("/login", methods=["GET","POST"])
 def login():
     form = LoginForm()
@@ -48,6 +74,119 @@ def login():
         print(form.errors)
     return render_template("login.html", form=form)
 
+
+
+'''
+Página de busca de todos os itens cadastrados, com filtros por palavra-chave, seleção de categoria, 
+seleção de estado, e seleção do tipo de ordenação que os itens serão mostrados.
+'''
+@app.route("/busca", methods=["GET","POST"])
+def busca():
+    global st_categoria 
+    global st_estado
+    global st_opcoes
+    ordem = Post.data_hora.desc()
+    form = SearchForm()
+    slc_category = FilterCategory(categorias=st_categoria)
+    slc_state = FilterState(estado=st_estado)
+    slc_options = FilterOptions(opcoes=st_opcoes)
+    
+
+    all_data = loadData()
+    
+
+    
+       
+    if slc_category.data and slc_category.validate():
+        st_categoria = slc_category.data['categorias']
+        if slc_category.data['categorias'] != "Todas":
+            all_data = []
+            all_data = loadData(categoria=st_categoria,estado=st_estado, ordem=ordem)
+            print(slc_category.data)
+        
+        else:
+            all_data = []
+            all_data = loadData(estado=st_estado, ordem=ordem)
+     
+    else:
+         print(slc_category.errors)
+
+
+
+
+    if slc_state.data and slc_state.validate():
+        st_estado = slc_state.data['estado']
+        if slc_state.data['estado'] != "Todos":
+            all_data = []
+            all_data = loadData(categoria=st_categoria,estado=st_estado, ordem=ordem)
+        
+        else:
+            all_data = []
+            all_data = loadData(categoria = st_categoria, ordem=ordem)
+            print(st_categoria)
+    else:
+         print(slc_category.errors)
+
+
+
+
+    
+    if slc_options.validate_on_submit():
+        st_opcoes = slc_options.data['opcoes']
+        if st_opcoes == 'Mais Recentes':
+            ordem = Post.data_hora.desc()
+        elif st_opcoes == 'Mais Antigos':
+            ordem = Post.data_hora.asc()
+        elif st_opcoes == 'A-z':
+            ordem = Post.titulo.asc()
+        elif st_opcoes == 'Z-a':
+            ordem = Post.titulo.desc()
+
+        if st_opcoes != "Todos":
+            all_data = []
+            all_data = loadData(categoria=st_categoria,estado=st_estado,ordem=ordem)
+        
+        else:
+            all_data = []
+            all_data = loadData(categoria = st_categoria, estado=st_estado)
+    else:
+         print(slc_category.errors)
+
+
+    if form.busca.data and form.validate():
+        search = db.session.query(Post).join(User).join(Category).filter(Post.titulo.like(f"%{form.busca.data}%")).all()
+        if search != '':
+            print(search)
+            modified_data = []
+            all_data = []
+            for item in search:
+                modified_data = []
+                modified_data.append(item.titulo)
+                modified_data.append(item.descricao)
+                modified_data.append(base64.b64encode(item.img_1).decode('ascii'))
+                modified_data.append(item.data_hora)
+                modified_data.append(item.user.estado)
+                modified_data.append(item.user.cidade)
+                modified_data.append(item.categoria.nome_categoria)
+                modified_data.append(item.get_id())
+
+                all_data.append(modified_data)
+        else:
+            pass
+    else:
+        print(form.errors)
+
+
+    num_posts = len(all_data)
+    print(f"Total de anuncios:{num_posts}")
+
+    return render_template("busca.html", form=form, slc_category=slc_category,estado = slc_state,slc_options=slc_options, data=all_data, st_categoria=st_categoria,st_estado=st_estado, num_posts = num_posts)
+
+
+
+'''
+Carrega função para encerrar sessão de usuário
+'''
 @app.route("/logout")
 def logout():
     logout_user()
@@ -55,64 +194,146 @@ def logout():
     return redirect(url_for("index"))
 
 
+
+'''
+Página de confirmação de cadastro
+'''
 @app.route("/register")
 def register():
     return render_template("cadastro.html")
 
-@app.route("/doacoes")
-def doacoes():
-    return "Pagina com filtros para o usuário visualizar todos os itens que estão sendo doados no momento"
 
-@app.route("/sobre")
-def sobre():
-    return "Pagina para descrever projeto da Univesp e integrantes "
 
-#@app.route("/doacoes/<int: id>")
-#def pg_item():
-#    return "pagina template para cada item sendo doado no site"
-
-@app.route("/profile")
-def profile():
-    return "pagina de perfil de usuario"
+'''
+Página dinâmica para os produtos cadastrados
+'''
+@app.route("/product/<info>")
+def product(info):
+    post= db.session.query(Post).join(User).join(Category).filter(Post.id_post==int(info)).first()
+    imagem = base64.b64encode(post.img_1).decode('ascii')
+    
+    return render_template("product.html",data=post, imagem=imagem)
 
 
 
-#Inserindo dados de categorias
-@app.route("/insere_post/<info>")
-@app.route("/insere_post", defaults={"info": None})
-def post(info):
-    i = Post("Bicicleta Y", "X tempo de uso em bom estado", None,None, None, None )
-    db.session.add(i)
-    db.session.commit()
-    return "Dados Inseridos"
-
-#Inserindo dados de categorias
-@app.route("/insere_categorias/<info>")
-@app.route("/insere_categorias", defaults={"info": None})
-def categorias(info):
-    categorys = ["Bicicletas", "Brinquedos", "Cobertores", "Eletroeletronicos", "Livros", "Moveis", "Roupas", "Sapatos"]
-    for c in categorys:
-        i = Category(c)
-        db.session.add(i)
+'''
+Página para o usuário logado inserir um novo anuncio de um item que deseja doar
+'''
+@app.route("/user-new-post", methods=["GET","POST"])
+def user_new_post():
+    form = PostForm()
+    
+    if form.validate_on_submit():
+        print(form.categorias.data)
+        if request.method == 'POST':
+            image_data = request.files[form.img_1.name].read()
+        # print(int(current_user.get_id()))
+        # print(int(form.categorias.data))
+        p = Post(form.titulo.data, form.descricao.data, image_data, id_usuario=int(current_user.get_id()),id_categoria=int(form.categorias.data) )
+        db.session.add(p)
         db.session.commit()
-    return "Dados Inseridos"
+        flash("Anúncio cadastrado com sucesso!")
+        return redirect(url_for('user_post'))
+    else:
+        print(form.errors)
 
-#pagina de teste para selecionar dados no banco (READ)
-@app.route("/teste2/<info>")
-@app.route("/teste2", defaults={"info": None})
-def teste2(info):
-    r= User.query.filter_by(estado= "Sao Paulo").all()
-    print(r)
-    return "Ok"
+    return render_template("user-new-post.html",form=form)
 
-#pagina de teste para atualizar dados no banco (UPDATE)
-@app.route("/teste3/<info>")
-@app.route("/teste3", defaults={"info": None})
-def teste3(info):
-    r= User.query.filter_by(estado= "Sao Paulo").first()
-    r.nome = "Patrick"
-    db.session.add(r)
-    db.session.commit()
-    return "Registro Atualizado"
+
+
+'''
+Página para o usuário logado verificar os seus anuncios ativos, editar ou excluir, caso desejar
+'''
+@app.route("/user-post", methods=["GET","POST"])
+def user_post():
+    user = current_user.email
+    print(user)
+    data = db.session.query(Post).join(User).join(Category).filter(
+        User.email == user).order_by(Post.data_hora.desc()).all()
+    modified_data = []
+    all_data = []
+    for item in data:
+        modified_data = []
+        modified_data.append(item.titulo)
+        modified_data.append(item.descricao)
+        modified_data.append(base64.b64encode(item.img_1).decode('ascii'))
+        modified_data.append(item.data_hora)
+        modified_data.append(item.user.estado)
+        modified_data.append(item.user.cidade)
+        modified_data.append(item.categoria.nome_categoria)
+        modified_data.append(item.get_id())
+
+        all_data.append(modified_data)
+    print(all_data)
+    return render_template("user-post.html", data=all_data)
+
+
+
+'''
+Página para o usuário logado editar suas informações de perfil
+'''
+@app.route("/user-profile", methods=["GET","POST"])
+def user_profile():
+
+    form = UserEditForm(name=current_user.nome.capitalize(),last_name=current_user.sobrenome.title(), email=current_user.email,
+                        phone_number=current_user.telefone,cep=current_user.cep, estado=current_user.estado,
+                        cidade=current_user.cidade,bairro=current_user.bairro)
+
+    if form.validate_on_submit():
+        form.validate_estado(form.estado)
+        
+        r= User.query.filter_by(id_usuario=int(current_user.get_id())).first()
+        r.nome = form.name.data
+        r.sobrenome = form.last_name.data
+        r.email = form.email.data
+        r.telefone = form.phone_number.data
+        r.cep = form.cep.data
+        r.estado = form.estado.data
+        r.cidade = form.cidade.data
+        r.bairro = form.bairro.data
+        db.session.add(r)
+        db.session.commit()
+        flash("Cadastro atualizado com sucesso","alert alert-success")
+    else:
+        if form.errors:
+            flash("Selecione uma opção válida","alert alert-danger")
+
+    return render_template("user-profile.html",form=form)
+
+
+'''
+Função para obter dados sobre os itens cadastrados de acordo com os filtros selecionados
+'''
+def loadData(categoria="", estado="", ordem=Post.data_hora.desc()):
+    if categoria == "Todas":
+        categoria = ""
+
+    if estado == "Todos":
+        estado = ""
+
+
+    data = db.session.query(Post).join(User).join(Category).filter(
+        Category.nome_categoria.like(f'%{categoria}%'),
+        User.estado.like(f'%{estado}%')).order_by(ordem).all()
+
+    modified_data = []
+    all_data = []
+    for item in data:
+        modified_data = []
+        modified_data.append(item.titulo)
+        modified_data.append(item.descricao)
+        modified_data.append(base64.b64encode(item.img_1).decode('ascii'))
+        modified_data.append(item.data_hora)
+        modified_data.append(item.user.estado)
+        modified_data.append(item.user.cidade)
+        modified_data.append(item.categoria.nome_categoria)
+        modified_data.append(item.get_id())
+
+        all_data.append(modified_data)
+    
+    return all_data
+
+
+
 
 

@@ -12,3 +12,7 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///'+ os.path.join(basedir,'storage.db')
 SECRET_KEY = "SENHA_BEM_SEGURA"
 
 
+UPLOAD_FOLDER = "./app/static/images/upload_img"
+ALLOWED_EXTENSIONS = ['png','jpg','jpeg']
+
+

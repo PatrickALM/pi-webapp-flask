@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="pt-br" class="h-100">
+
+<head>
+  <title>TECSOL</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Protótipo para o Projeto Integrador de Computação 1° Semestre 2023 Univesp">
+  <meta name="author" content="">
+  <meta name="generator" content="">
+  <title>Projeto Integrador · 2023</title>
+
+  <!-- Bootstrap CSS v5.2.1 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+  
+ 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+  <link href=" {{url_for('static', filename='css/custom.css')}} " rel="stylesheet">
+
+
+</head>
+
+<body>  
+    <header class="mb-auto">
+      <nav class="navbar navbar-expand-lg bg-light shadow-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <img src= " {{url_for('static', filename='images/icon.png')}} " width= "80" height="80" class="logo img-fluid" alt="TECSOL">
+                <span style="display: inline-block; vertical-align: middle;">
+                    TECSOL
+                    <small>Tecnologia e Solidariedade</small>
+                </span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="{{ url_for('index') + '#top' }}">Inicio</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="{{ url_for('index') + '#section_2' }}">Sobre</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="{{ url_for('index') + '#section_3' }}">Como ajudar</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="{{ url_for('index') + '#section_4' }}">Registre-se</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link click-scroll" href="{{ url_for('busca') }}">Buscar</a>
+                    </li>
+                                        
+                    {% if current_user.is_authenticated %}
+                      <div class="dropdown nav-item ms-3">
+                        <button class="custom-btn custom-border-btn btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          {{ current_user.nome.capitalize() + ' ' + current_user.sobrenome.split()[-1].capitalize()}}
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <li><a class="dropdown-item" href="{{ url_for('user_post') }}">Meus anúncios</a></li>
+                          <li><a class="dropdown-item" href="{{ url_for('user_profile') }}">Perfil</a></li>
+                          <li><hr class="dropdown-divider"></li>
+                          <li><a class="dropdown-item" href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right me-2"></i> Sair</a></li>
+                        </ul>
+                      </div>                                        
+                    {% else %}
+                      
+                      <li class="nav-item ms-3">
+                        <a class="nav-link custom-btn custom-border-btn btn" href="{{ url_for('login') }}">Entrar</a>
+                      </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    </header>
+
+    <main>
+
+
+      <section class="">
+        <div class="container text-center" style="margin-top: 8rem;padding-inline: 20%;">
+          <form method="POST" class="d-flex" action="{{ url_for('busca') }}">
+            {{ form.csrf_token}}
+            {{ form.hidden_tag() }}
+            {{ form.busca(class="form-control me-0", placeholder="Buscar por palavra-chave") }}
+            <button class="btn bg-dark btn-outline-secondary ms-0" type="submit">
+              <img src= " {{url_for('static', filename='images/pesquisar.png')}} " width= "20" height="20"  alt=" ">
+            </button>     
+          </form>
+
+        </div>
+        <div class="container mt-5 text-center border-bottom border-2 border-secondary pb-3">
+          <div class="row align-items-start">
+
+            <div class="col fw-semibold">
+              <img src=" {{url_for('static', filename='images/filter.png')}} " width= "16" height="16"  alt=" ">
+              <small>Filtrar por:</small>
+            </div>
+
+            <div class="col fw-semibold">
+              <small>Categorias</small>
+            </div>
+            <div class="col ms-0 form-group">
+              <form method="POST" onchange="{{ url_for('busca') }}">
+                {{ slc_category.csrf_token }}
+                {{ slc_category.hidden_tag() }}
+                {{ slc_category.categorias(class="form-control",**{"onchange":"this.form.submit();"}) }}
+              </form>
+            </div>
+            
+
+            <div class="col fw-semibold">
+              <small>Estado</small>
+            </div>
+            <div class="col ms-0 form-group">
+              <form method="POST" action="{{ url_for('busca') }}">
+                {{ estado.csrf_token }}
+                {{ estado.hidden_tag() }}
+                {{ estado.estado(class="form-control",**{"onchange":"this.form.submit();"}) }}
+              </form>
+            </div>
+
+
+            <div class="col fw-semibold">
+              <img src=" {{url_for('static', filename='images/order.png')}} " width= "16" height="16"  alt=" ">
+              <small>Ordernar</small>
+            </div>
+            <div class="col ms-0 form-group">
+              <form method="POST" action="{{ url_for('busca') }}">
+                {{ slc_options.csrf_token }}
+                {{ slc_options.hidden_tag() }}
+                {{ slc_options.opcoes(class="form-control",**{"onchange":"this.form.submit()"}) }}
+              </form>
+            </div>
+
+
+            <div class="col fw-semibold">
+              <small>Total {{ num_posts }} Itens</small>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+      <section class="mt-5 mb-5">
+        <div class="container">
+          <div class="row justify-content-start align-items-start">
+            
+            
+            {% for item in data: %}
+              <div class="col-3 mb-3">
+
+                <a type="button" class="btn btn-light" href="{{ url_for('product', info=item[7]) }}">
+                  <div class="card bg-light" style="width: 14rem; min-height: 25rem;">
+                    <img src="data:;base64,{{ item[2] }}" class="card-img-top" style= "height: 14rem;"alt="...">
+                    <div class="card-body d-flex flex-column align-items-center">
+                      <strong class="card-title text-dark border-bottom border-secondary">{{ item[0] }}</strong>
+                      <p class="card-text">{{ item[4] }} - {{ item[5] }}</p>
+                      <p class="card-text">{{ item[3] }}</p>
+                      <div class="mt-auto">
+                        <span class="badge badge-pill bg-success align-self-end">{{ item[6] }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+
+
+              </div>
+
+            {% endfor %}
+           
+          </div>
+        </div>
+      </section>
+    
+
+
+
+    </main>
+  
+  <footer>
+    <!-- place footer here -->
+  </footer>
+  <!-- Bootstrap JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+  
+</body>
+
+</html>

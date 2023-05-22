@@ -50,10 +50,7 @@ class Post(db.Model):
     id_post = db.Column('id_post',db.Integer,primary_key=True)
     titulo = db.Column('titulo',db.String(255),nullable = False)
     descricao = db.Column('descricao',db.String(255), nullable = False)
-    img_1 = db.Column('img_1', BLOB, nullable= True)
-    img_2 = db.Column('img_2', BLOB, nullable= True)
-    img_3 = db.Column('img_3', BLOB, nullable= True)
-    img_4 = db.Column('img_4', BLOB, nullable= True)
+    img_1 = db.Column('img_1', db.LargeBinary, nullable= False)
     data_hora = db.Column(db.DateTime(timezone=True), server_default=func.now())
     id_usuario = db.Column('id_usuario',db.Integer, db.ForeignKey('users.id_usuario'))
     id_categoria = db.Column('id_categoria',db.Integer, db.ForeignKey('categorys.id_categoria'))
@@ -61,17 +58,18 @@ class Post(db.Model):
     user = db.relationship('User', foreign_keys = id_usuario)
     categoria = db.relationship('Category', foreign_keys = id_categoria)
 
-    def __init__(self,titulo, descricao, img_1,img_2,img_3,img_4):
+    def __init__(self,titulo, descricao, img_1, id_usuario, id_categoria):
         self.titulo= titulo
         self.descricao = descricao
         self.img_1 = img_1
-        self.img_2 = img_2
-        self.img_3 = img_3
-        self.img_4 = img_4
-
+        self.id_usuario = id_usuario
+        self.id_categoria = id_categoria
     
     def __repr__(self):
-        return "<Project %r>" % self.id_post
+        return "<Item %r>" % self.titulo
+    
+    def get_id(self):
+        return str(self.id_post)
     
 
 class Category(db.Model):
@@ -81,6 +79,9 @@ class Category(db.Model):
 
     def __init__(self, nome_categoria):
         self.nome_categoria = nome_categoria
+
+    def __str__(self):
+        return self.nome_categoria
     
     def __repr__(self):
-        return "<Category %r>" % self.nome_categoria
+        return "%r" % self.nome_categoria
