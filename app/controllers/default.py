@@ -51,7 +51,7 @@ def index():
         else:
             flash("Erro de confirmação de senha.")
     else:
-        print(form_register.errors)
+        flash(form_register.errors)
     return render_template("index.html", form=form_register)
 
 
@@ -71,7 +71,7 @@ def login():
         else:
             flash("Login Inválido")
     else:
-        print(form.errors)
+        flash(form.errors)
     return render_template("login.html", form=form)
 
 
@@ -102,14 +102,14 @@ def busca():
         if slc_category.data['categorias'] != "Todas":
             all_data = []
             all_data = loadData(categoria=st_categoria,estado=st_estado, ordem=ordem)
-            print(slc_category.data)
+            
         
         else:
             all_data = []
             all_data = loadData(estado=st_estado, ordem=ordem)
      
     else:
-         print(slc_category.errors)
+         flash(slc_category.errors)
 
 
 
@@ -123,9 +123,9 @@ def busca():
         else:
             all_data = []
             all_data = loadData(categoria = st_categoria, ordem=ordem)
-            print(st_categoria)
+            
     else:
-         print(slc_category.errors)
+         flash(slc_category.errors)
 
 
 
@@ -150,7 +150,7 @@ def busca():
             all_data = []
             all_data = loadData(categoria = st_categoria, estado=st_estado)
     else:
-         print(slc_category.errors)
+         flash(slc_category.errors)
 
 
     if form.busca.data and form.validate():
@@ -214,6 +214,53 @@ def product(info):
     
     return render_template("product.html",data=post, imagem=imagem)
 
+'''
+Página dinâmica para editar os produtos cadastrados
+'''
+@app.route("/edit_product/<info>", methods=["GET","POST"])
+def edit_product(info):
+    
+    post= db.session.query(Post).join(User).join(Category).filter(Post.id_post==int(info)).first()
+
+    form = PostForm(titulo=post.titulo,descricao=post.descricao,img_1=post.img_1,categorias=post.id_categoria)
+
+    imagem = base64.b64encode(post.img_1).decode('ascii')
+
+    if form.validate_on_submit():
+        if request.method == 'POST' and form.img_1.data != '':
+            image_data = request.files[form.img_1.name].read()
+            post.img_1 = image_data
+        post.titulo = form.titulo.data
+        post.descricao = form.descricao.data
+        post.id_categoria = form.categorias.data
+        db.session.add(post)
+        db.session.commit()
+        flash("Item atualizado com sucesso","alert alert-success")
+        return redirect(url_for("user_post"))
+
+    else:
+        if form.errors:
+            flash(str(form.errors),"alert alert-danger")
+    
+    
+    return render_template("edit-product.html",form=form,data=post,imagem=imagem)
+
+@app.route("/delete_product/<info>", methods=["GET","POST"])
+def delete_product(info):
+    
+    query= db.session.query(Post).filter(Post.id_post==int(info)).delete()
+    db.session.commit()
+    flash(f"Item deletado","alert alert-warning")
+    return redirect(url_for("user_post"))
+    
+
+
+
+@app.route("/popup/<info>", methods=["GET","POST"])
+def popup(info):
+
+    return render_template('popup.html',id=info)
+
 
 
 '''
@@ -224,18 +271,17 @@ def user_new_post():
     form = PostForm()
     
     if form.validate_on_submit():
-        print(form.categorias.data)
+        
         if request.method == 'POST':
             image_data = request.files[form.img_1.name].read()
-        # print(int(current_user.get_id()))
-        # print(int(form.categorias.data))
+        
         p = Post(form.titulo.data, form.descricao.data, image_data, id_usuario=int(current_user.get_id()),id_categoria=int(form.categorias.data) )
         db.session.add(p)
         db.session.commit()
         flash("Anúncio cadastrado com sucesso!")
         return redirect(url_for('user_post'))
     else:
-        print(form.errors)
+        flash(form.errors)
 
     return render_template("user-new-post.html",form=form)
 
@@ -247,7 +293,7 @@ Página para o usuário logado verificar os seus anuncios ativos, editar ou excl
 @app.route("/user-post", methods=["GET","POST"])
 def user_post():
     user = current_user.email
-    print(user)
+    
     data = db.session.query(Post).join(User).join(Category).filter(
         User.email == user).order_by(Post.data_hora.desc()).all()
     modified_data = []
@@ -264,7 +310,7 @@ def user_post():
         modified_data.append(item.get_id())
 
         all_data.append(modified_data)
-    print(all_data)
+    
     return render_template("user-post.html", data=all_data)
 
 

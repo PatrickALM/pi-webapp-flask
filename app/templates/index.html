@@ -99,15 +99,15 @@
 
     <main>
 
-      <section class="pt-7 pb-7" id="top">
+      <section class="pt-7 pb-7 mt-4" id="top">
         <div class="container">
           <div class="row align-items-center">
             <div class="col-md-6 text-md-start text-center py-6">
-              <h1 class="mb-4 fs-9 fw-bold">Lorem ipsum dolor sit amet.</h1>
-              <p class="mb-6 lead text-secondary">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla, id!<br class="d-none d-xl-block" />in one place! The most intuitive way to imagine<br class="d-none d-xl-block" />your next user experience.</p>
-              <div class="text-center text-md-start"><a class="btn btn-warning me-3 btn-lg" href="#!" role="button">Comece já!</a></div>
+              <h1 class="mb-4 fs-9 fw-bold">Conectando quem tem a quem precisa.</h1>
+              <p class="mb-6 lead text-break text-secondary">O TECSOL é uma aplicação web desenvolvida por alunos da <strong>Univesp</strong>. Promovendo a solidariedade e sustentabilidade, oferecemos a possibilidade de doar itens em desuso para pessoas que precisam.<br class="d-none d-xl-block" />Seja um colaborador.</p>
+              <div class="text-center text-md-start"><a class="btn btn-warning me-3 btn-lg" href="#section_4" role="button">Comece já!</a></div>
             </div>
-            <div class="col-md-6 text-end"><img class="pt-7 pt-md-0 img-fluid" src=" {{url_for('static', filename='images/placeholder.png')}} " alt="" /></div>
+            <div class="col-md-6 text-end"><img class="pt-7 pt-md-0 img-fluid" src=" {{url_for('static', filename='images/index-img.jpeg')}} " alt=" {{url_for('static', filename='images/placeholder.png')}} " /></div>
           </div>
         </div>
       </section>
@@ -117,7 +117,7 @@
             <div class="row justify-content-center">
 
                 <div class="col-lg-10 col-12 text-center mx-auto">
-                    <h2 class="mb-5">Lorem ipsum dolor sit amet.</h2>
+                    <h2 class="mb-5">Desapegue com Propósito</h2>
                 </div>
 
                 <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
@@ -171,29 +171,20 @@
 
                       <p class="mb-0">Produto de um Projeto Integrador para a Universidade Virtual do Estado de São Paulo
                                       (UNIVESP), este website foi desenvolvido por alunos do Eixo de Computação do Polo Ceu Água Azul.
+
                       </p>
                   </div>
 
                   <div class="row">
-                      <div class="col-lg-6 col-md-6 col-12">
+                      <div class="col-lg-12 col-md-12 col-12">
                           <div class="custom-text-box mb-lg-0">
                               <h5 class="mb-3">Nossa Missão</h5>
 
-                              <p>Sed leo nisl, posuere at molestie ac, suscipit auctor quis metus</p>
+                              <p>Nossa missão é conectar pessoas generosas que desejam doar itens com aqueles que mais precisam, promovendo a solidariedade e o impacto positivo na sociedade.</p>
 
-                              <ul class="custom-list mt-2">
-                                  <li class="custom-list-item d-flex">
-                                      <i class="bi-check custom-text-box-icon me-2"></i>
-                                      Charity Theme
-                                  </li>
-
-                                  <li class="custom-list-item d-flex">
-                                      <i class="bi-check custom-text-box-icon me-2"></i>
-                                      Semantic HTML
-                                  </li>
-                              </ul>
                           </div>
                       </div>
+
                   </div>
               </div>
 
@@ -207,7 +198,7 @@
         <div class="row justify-content-center">
 
             <div class="col-lg-10 col-12 text-center mx-auto">
-                <h2 class="mb-5">Como posso ajudar?</h2>
+                <h2 class="mb-5">Quais itens posso doar?</h2>
             </div>
 
             <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
@@ -294,16 +285,16 @@
     </div>
   </section>
 
-  <section class="volunteer-section section-padding" id="section_4">
+  <section class="bg-image section-padding" id="section_4" style="background-image: url({{url_for('static', filename='images/bg-register.jpg')}});">
     <div class="container">
         <div class="row justify-content-center">
 
             <div class="col-lg-6 col-12">
-                <h2 class="text-white mb-4">Cadastre-se</h2>
+                
 
                 <form class="custom-form volunteer-form mb-5 mb-lg-0" action="#" method="post" role="form">
                     {{ form.csrf_token }}
-        
+                    <h2 class="text-dark mb-4">Cadastre-se</h2>
                     <div class="row">
                         <div class="col-lg-6 col-12 form-group">
                             <label>Nome</label>
@@ -362,9 +353,7 @@
         </div>
     </div>
   </section>
-
-      <h1 class = "text-center text-dark mt-5"> Pagina Principal</h1>
-    </main>
+  </main>
   
   <footer>
     <!-- place footer here -->

@@ -64,6 +64,8 @@ class UserEditForm(FlaskForm):
     def validate_estado(form,field):
         if field.data == 'Selecione o estado':
             raise ValidationError("Selecione uma opção válida")
+        
+        
 
 
 
